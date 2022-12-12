@@ -9,21 +9,21 @@ from typing import Tuple
 # Реализовать функции сложения, вычитания и умножения двух чисел.
 def add_mul(first: float, second: float) -> Tuple[float, float, float]:
     return first+second, first-second, first * second
+
 print(add_mul(2.5, 4.8))
 
 # Реализовать функции деления, деления нацело и нахождения остатка от деления.
 def div_int_rem(first: float, second: float) -> Tuple[float, float, float]:
     return first / second, first // second, first % second
+
 print(div_int_rem(5, 8))
 
 
 # Обменять два целочисленных значение с помощью битового xor не используя промежуточные переменные.
 def xor_swap(a: int, b: int) -> int:
-    a = a ^ b
-    b = b ^ a
-    a = a ^ b
-    return a, b
-print(xor_swap(2, 3))
+    return a ^ b ^ a, b ^ a ^ b
+
+print(xor_swap(18, 3))
 
 
 # Вернуть наименьшее число, используя условный оператор.
@@ -34,18 +34,21 @@ def min_conditional(a: float, b: float) -> float:
         return 'числа равны'
     else:
         return b
+
 print(min_conditional(5, 7))
 
 
 # Реализовать функции умножения на 2, 8 и 32 с помощью битовых операций сдвига.
 def mul_shift_2_8_32(value: int) -> Tuple[int, int, int]:
     return value << 1, value << 3, value << 5
+
 print(mul_shift_2_8_32(1))
 
 
 # Реализовать функции деления на 2, 8 и 32 с помощью битовых операций сдвига.
 def div_shift_2_8_32(value: int) -> Tuple[int, int, int]:
     return value >> 1, value >> 3, value >> 5
+
 print(div_shift_2_8_32(32))
 
 
@@ -55,18 +58,23 @@ def exponentiation(divident: float, divider: float, power: float) -> float:
         return (divident % divider) ** power
     except ZeroDivisionError:
         return 'divider не должен быть равен нулю'
+
 print(exponentiation(27, 12, 5))
 
 
 # Определить знак 32-битного числа с помощью операции &.
 def sign(value: int) -> int:
-    return 'знак +' if ~value & (1 << 32) else 'знак -'
+    if (value >> 31) & 1:
+        return 'знак +'
+    return 'знак -'
+
 print(sign(2845645471))
 
 
 # Умножить целочисленное значение на -1 с помощью битовых операций и сложения.
 def change_sign(value: int) -> int:
     return ~value + 1
+
 print(change_sign(255))
 
 
@@ -75,8 +83,9 @@ def check_32_even_bit_set(value: int) -> bool:
     counter = 0
     for i in range(0, 32, 2):
         if value & (1 << i):
-            counter +=1
-    return True if counter > 0 else False
+            counter += 1
+    return counter > 0
+
 print(check_32_even_bit_set(4294967294))
 
 
@@ -87,6 +96,7 @@ def calculate_32_zero_bits(value: int) -> int:
         if value & (1 << i) == 0:
             count += 1
     return count
+
 print(calculate_32_zero_bits(4294967294))
 
 
@@ -94,6 +104,7 @@ print(calculate_32_zero_bits(4294967294))
 # Первое число должно располагаться в 4 младших битах, второе число в - 4 старших.
 def pack_4_4(first: int, second: int) -> int:
     return ((first & 0b11110000) >> 4) | (second & 0b11110000)
+
 print(pack_4_4(170, 142))
 
 
@@ -103,6 +114,7 @@ def unpack_4_4(value: int):
     first = (value & 0b00001111) << 4
     second = (value & 0b11110000)
     return first, second
+
 print(unpack_4_4(138))
 
 
@@ -114,6 +126,7 @@ def clamp(value: float, low: float, high: float) -> float:
         return low
     else:
         return high
+
 print(clamp(12, 12, 55))
 
 
@@ -133,12 +146,14 @@ def clamp_any(value: float, low: float, high: float) -> float:
             return high
         else:
             return low
+
 print(clamp_any(98, 45, 89))
 
 
 # Вернуть True, если число нечетно и входит в интервал от -10 до 10.
 def event_and_match_interval_m10_10(value: int) -> bool:
-    return True if -10 <= value <= 10 and value % 2 else False
+    return -10 <= value <= 10 and value % 2 == 1
+
 print(event_and_match_interval_m10_10(7))
 
 
@@ -146,22 +161,26 @@ print(event_and_match_interval_m10_10(7))
 def reverse_operations(value: float):
     return value ** (4 * (0.5 + 0.25))
 
+print(reverse_operations(5))
 
 # Установить n-ый бит числа в единицу.
 def set_nth_bit(value: int, n: int) -> int:
     return value | (1 << n)
+
 print(set_nth_bit(32, 2))
 
 
 # Переключить n-ый бит числа.
 def switch_nth_bit(value: int, n: int) -> int:
     return value ^ (1 << n)
+
 print(switch_nth_bit(38, 1))
 
 
 # Расставить скобки таким образом, чтобы выражение в задаче было возведено в степень 3.
 def change_priorities(x: float) -> float:
     return (x + 3) ** 3
+
 print(change_priorities(2))
 
 '''
@@ -182,4 +201,5 @@ def int_to_float(value: int) -> float:
 # Вернуть наименьшее целое число без использования условных операторов и встроенных функций.
 def min_raw(first: int, last: int) -> int:
     return last + ((first - last) & ((first-last) >> 31))
+
 print(min_raw(145, 254))
