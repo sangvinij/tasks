@@ -138,19 +138,20 @@ def clamp(value: float, low: float, high: float) -> float:
     if value < low:
         return low
     return high
+
+
 print(clamp(12, 12, 55))
 
 
 # Ограничить число заданным интервалом. Нижняя граница может быть как меньше, так и больше верхней.
 def clamp_any(value: float, low: float, high: float) -> float:
-    if low <= high:
-        return clamp(value, low, high)
     if low >= high:
         if high <= value <= low:
             return value
         if value < high:
             return high
-    return low
+        return low
+    return clamp(value, low, high)
 
 
 print(clamp_any(98, 45, 89))
