@@ -103,7 +103,6 @@ class LengthUnits:
         if not isinstance(other, (int, float, LengthUnits)):
             raise ArithmeticError('invalid other type')
 
-
         sc = other
         if not isinstance(other, (int, float)):
             sc = (other.value / other.conv) * self.conv
