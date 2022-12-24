@@ -59,6 +59,7 @@ class LengthUnits:
         sc = other
         if not isinstance(other, (int, float)):
             sc = (other.value / other.conv) * self.conv
+
         self.value += sc
         return self
 
@@ -99,8 +100,9 @@ class LengthUnits:
         return self
 
     def __truediv__(self, other):
-        if not isinstance(other, (int, LengthUnits)):
-            raise TypeError('only int or LengthUnits')
+        if not isinstance(other, (int, float, LengthUnits)):
+            raise ArithmeticError('invalid other type')
+
 
         sc = other
         if not isinstance(other, (int, float)):
@@ -108,8 +110,8 @@ class LengthUnits:
         return f'{self.value / sc} {self.v}'
 
     def __itruediv__(self, other):
-        if not isinstance(other, (int, LengthUnits)):
-            raise TypeError('only int or LengthUnits')
+        if not isinstance(other, (int, float, LengthUnits)):
+            raise ArithmeticError('invalid other type')
 
         sc = other
         if not isinstance(other, (int, float)):
@@ -130,7 +132,7 @@ class Centimeters(LengthUnits):
 
 
 class Meters(LengthUnits):
-    def __init__(self, value, conv=100, v='m'):
+    def __init__(self, value, conv=1, v='m'):
         super().__init__(value, conv, v)
 
 
@@ -140,7 +142,7 @@ class Kilometers(LengthUnits):
 
 
 class Inches(LengthUnits):
-    def __init__(self, value, conv=39.3701, v='in'):
+    def __init__(self, value, conv=39.3701, v='inches'):
         super().__init__(value, conv, v)
 
 
