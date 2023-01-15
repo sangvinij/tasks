@@ -5,7 +5,7 @@
 
 
 # Реализовать функцию, которая принимает строку и возвращает ее в обратном порядке.
-def str_return(a: str):
+def str_return(a: str) -> str:
     return a[::-1]
 
 
@@ -15,20 +15,17 @@ print(str_return('привет я строка'))
 # Реализовать функцию, которая принимает два параметра: число и степень - и возвращает это число,
 # возведенное в степень.
 # В случае, если степень не задана пользователем, используется значение 2.0.
-def step(a, n=2.0):
+def step(a: float, n=2.0) -> float:
     return a ** n
 
 
-print(step(2, 4))
+print(step(2.5, 4.0))
 
 
 # Реализовать функцию, которая принимает произвольный набор параметров и возвращает кортеж, содержащий
 # типы переданных параметров.
-def params(*args):
-    a = []
-    for arg in args:
-        a.append(type(arg))
-    return tuple(a)
+def params(*args) -> tuple:
+    return tuple(map(type, args))
 
 
 print(params(2.5, 4, (2, 5, 1), {1: 2}, 'stroka', [1, 24, 3], True))
@@ -45,7 +42,7 @@ print(params(2.5, 4, (2, 5, 1), {1: 2}, 'stroka', [1, 24, 3], True))
 #   dict: [['e', {1: 2}]]
 # }
 
-def slowar(**kwargs):
+def slowar(**kwargs) -> dict:
     slow = {}
     for key, value in kwargs.items():
         slow.setdefault(type(value), []).append([key, value])
@@ -62,19 +59,18 @@ print(slowar(a=1, b=2.4, c=3, d=4.5, e=5.8, f='sa', g='stroka', h={1: 2}, i={3: 
 # отрицательная индексация.
 # Вместо *name* должен быть подставлен именованный параметр с именем name.
 
-def stroka(string, *args, **kwargs):
-    spis = string.split()
-    for i in range(len(spis)):
-        if '**' in spis[i]:
-            spis[i] = spis[i].replace('**', '*')
-        elif '*' in spis[i]:
-            names = spis[i].strip('*,')
-            if names.isdigit():
-                spis[i] = spis[i].replace(f'*{names}*', str(args[int(names)]))
+def stroka(string: str, *args, **kwargs) -> str:
+    st_separate = string.split('*')
+    for i in range(len(st_separate)):
+        if i % 2:
+            if not st_separate[i]:
+                st_separate[i] = '*'
+            elif st_separate[i] in kwargs:
+                st_separate[i] = str(kwargs[st_separate[i]])
             else:
-                spis[i] = spis[i].replace(f'*{names}*', str(kwargs[names]))
+                st_separate[i] = str(args[int(st_separate[i])])
 
-    strk = ' '.join(spis)
+    strk = ''.join(st_separate)
     return strk
 
 
