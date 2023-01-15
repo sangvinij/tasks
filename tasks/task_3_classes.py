@@ -25,23 +25,16 @@
 
 
 class LengthUnits:
-    def __init__(self, value, conv=1, v=None):
+    def __init__(self, value):
         if not isinstance(value, (int, float)):
             raise TypeError('invalid value type')
         self.value = value
-        self.conv = conv
-        self.v = v
-
-    def __str__(self):
-        return f"{self.value} {self.v}"
 
     def __eq__(self, other):
-        sc = (other.value / other.conv) * self.conv
-        return self.value == sc
+        return self.value == other.value
 
     def __lt__(self, other):
-        sc = (other.value / other.conv) * self.conv
-        return self.value < sc
+        return self.value < other.value
 
     def __add__(self, other):
         if not isinstance(other, (int, float, LengthUnits)):
@@ -49,8 +42,8 @@ class LengthUnits:
 
         sc = other
         if not isinstance(other, (int, float)):
-            sc = (other.value / other.conv) * self.conv
-        return f'{self.value + sc} {self.v}'
+            sc = other.value
+        return self.__class__(self.value + sc)
 
     def __iadd__(self, other):
         if not isinstance(other, (int, float, LengthUnits)):
@@ -58,7 +51,7 @@ class LengthUnits:
 
         sc = other
         if not isinstance(other, (int, float)):
-            sc = (other.value / other.conv) * self.conv
+            sc = other.value
 
         self.value += sc
         return self
@@ -69,8 +62,8 @@ class LengthUnits:
 
         sc = other
         if not isinstance(other, (int, float)):
-            sc = (other.value / other.conv) * self.conv
-        return f'{self.value - sc} {self.v}'
+            sc = other.value
+        return self.__class__(self.value - sc)
 
     def __isub__(self, other):
         if not isinstance(other, (int, float, LengthUnits)):
@@ -78,7 +71,7 @@ class LengthUnits:
 
         sc = other
         if not isinstance(other, (int, float)):
-            sc = (other.value / other.conv) * self.conv
+            sc = other.value
 
         self.value -= sc
         return self
@@ -88,7 +81,7 @@ class LengthUnits:
             raise ArithmeticError('invalid other type')
 
         sc = other
-        return f'{self.value * sc} {self.v}'
+        return self.__class__(self.value * sc)
 
     def __imul__(self, other):
         if not isinstance(other, (int, float, LengthUnits)):
@@ -105,8 +98,8 @@ class LengthUnits:
 
         sc = other
         if not isinstance(other, (int, float)):
-            sc = (other.value / other.conv) * self.conv
-        return f'{self.value / sc} {self.v}'
+            sc = other.value
+        return self.__class__(self.value / sc)
 
     def __itruediv__(self, other):
         if not isinstance(other, (int, float, LengthUnits)):
@@ -114,62 +107,128 @@ class LengthUnits:
 
         sc = other
         if not isinstance(other, (int, float)):
-            sc = (other.value / other.conv) * self.conv
+            sc = other.value
 
         self.value /= sc
         return self
 
 
 class Millimeters(LengthUnits):
-    def __init__(self, value, conv=1000, v='mm'):
-        super().__init__(value, conv, v)
+    CONV = 1000
+    UNIT = 'mm'
+
+    def __init__(self, value):
+        super().__init__(value)
+
+    def __str__(self):
+        return f'{self.value * self.CONV} {self.UNIT}'
 
 
 class Centimeters(LengthUnits):
-    def __init__(self, value, conv=100, v='cm'):
-        super().__init__(value, conv, v)
+    CONV = 100
+    UNIT = 'cm'
+
+    def __init__(self, value):
+        super().__init__(value)
+
+    def __str__(self):
+        return f'{self.value * self.CONV} {self.UNIT}'
 
 
 class Meters(LengthUnits):
-    def __init__(self, value, conv=1, v='m'):
-        super().__init__(value, conv, v)
+    CONV = 1
+    UNIT = 'm'
+
+    def __init__(self, value):
+        super().__init__(value)
+
+    def __str__(self):
+        return f'{self.value * self.CONV} {self.UNIT}'
 
 
 class Kilometers(LengthUnits):
-    def __init__(self, value, conv=0.001, v='km'):
-        super().__init__(value, conv, v)
+    CONV = 0.001
+    UNIT = 'km'
+
+    def __init__(self, value):
+        super().__init__(value)
+
+    def __str__(self):
+        return f'{self.value * self.CONV} {self.UNIT}'
 
 
 class Inches(LengthUnits):
-    def __init__(self, value, conv=39.3701, v='inches'):
-        super().__init__(value, conv, v)
+    CONV = 39.3701
+    UNIT = 'inc'
+
+    def __init__(self, value):
+        super().__init__(value)
+
+    def __str__(self):
+        return f'{self.value * self.CONV} {self.UNIT}'
 
 
 class Feets(LengthUnits):
-    def __init__(self, value, conv=3.28084, v='f'):
-        super().__init__(value, conv, v)
+    CONV = 3.28084
+    UNIT = 'ft'
+
+    def __init__(self, value):
+        super().__init__(value)
+
+    def __str__(self):
+        return f'{self.value * self.CONV} {self.UNIT}'
 
 
 class Yards(LengthUnits):
-    def __init__(self, value, conv=1.09361, v='yd'):
-        super().__init__(value, conv, v)
+    CONV = 1.0936
+    UNIT = 'yd'
+
+    def __init__(self, value):
+        super().__init__(value)
+
+    def __str__(self):
+        return f'{self.value * self.CONV} {self.UNIT}'
 
 
 class Miles(LengthUnits):
-    def __init__(self, value, conv=0.000621371, v='miles'):
-        super().__init__(value, conv, v)
+    CONV = 0.000621371
+    UNIT = 'mi'
+
+    def __init__(self, value):
+        super().__init__(value)
+
+    def __str__(self):
+        return f'{self.value * self.CONV} {self.UNIT}'
 
 
 class Fen(LengthUnits):
-    def __init__(self, value, conv=269.2, v='Fen'):
-        super().__init__(value, conv, v)
+    CONV = 269.2
+    UNIT = 'fen'
+
+    def __init__(self, value):
+        super().__init__(value)
+
+    def __str__(self):
+        return f'{self.value * self.CONV} {self.UNIT}'
 
 
 class Chi(LengthUnits):
-    def __init__(self, value, conv=2.692, v='Chi'):
-        super().__init__(value, conv, v)
+    CONV = 2.692
+    UNIT = 'chi'
+
+    def __init__(self, value):
+        super().__init__(value)
+
+    def __str__(self):
+        return f'{self.value * self.CONV} {self.UNIT}'
 
 
 class In(LengthUnits):
-    def __init__(self, value, conv=0.03125, v='in'):
-        super().__init__(value, conv, v)
+    CONV = 0.03125
+    UNIT = 'in'
+
+    def __init__(self, value):
+        super().__init__(value)
+
+    def __str__(self):
+        return f'{self.value * self.CONV} {self.UNIT}'
