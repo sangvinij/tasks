@@ -5,7 +5,7 @@
 '''
 import numbers
 from typing import Any, Dict, Iterable, List, Tuple
-from numbers import Number
+
 
 
 # Сконструировать и вернуть список из переданных аргументов.
@@ -202,9 +202,7 @@ print(build_dict_from_two_lists([1, 2, 3], [4, 5, 6]))
 # Сформировать из двух словарей и вернуть его. В случае, если ключи совпадают,
 # использовать значение из второго словаря (dict.update).
 def build_dict_using_update(first: Dict, second: Dict) -> Dict:
-    slow = first.copy()
-    slow.update(second)
-    return slow
+    return {**first, **second}
 
 
 print(build_dict_using_update({1: 2, 2: 3, 3: 4, 4: 5, 6: 7}, {5: 6, 7: 8, 1: 3}))
@@ -213,9 +211,7 @@ print(build_dict_using_update({1: 2, 2: 3, 3: 4, 4: 5, 6: 7}, {5: 6, 7: 8, 1: 3}
 # Обновить словарь (и вернуть его), используя значения именованных аргументов.
 # Заменить значение в случае совпадения ключей.
 def update_dict_using_kwargs(dictionary: Dict, **kwargs) -> Dict:
-    slow = dictionary.copy()
-    slow.update(kwargs)
-    return slow
+    return {**dictionary, **kwargs}
 
 
 print(update_dict_using_kwargs({'a': 2, 'b': 3, 'c': 4, 'd': 5, 'e': 7}, a='21', b=6, f=19))
@@ -379,21 +375,20 @@ print(sort_dict_backward_with_int_keys({4: 1, 2: 3, 1: 2, 3: 4, 5: 5}))
 # В качестве ключей могут выступать: целые числа, дробные числа и строки.
 # Приоритет сортировки групп (от высшего к низшему): целые числа, дробные числа, строки.
 def group_dict_elements_by_key_type(dictionary: Dict) -> Dict:
-    # не понимаю, как нормальным способом решить эту и следующую задачу
     types = {}
     for k in dictionary:
         if type(k) not in types:
             if isinstance(k, int):
-                types[type(k)] = len(types)
+                types[type(k)] = 1
             elif isinstance(k, float):
-                types[type(k)] = len(types) + 3
+                types[type(k)] = 2
             else:
-                types[type(k)] = len(types) + 2
-    return dict(sorted(dictionary.items(), key=lambda k: (types[type(k[0])], str(k[0]))))
+                types[type(k)] = 3
+    return dict(sorted(dictionary.items(), key=lambda k: (types[type(k[0])], k[0])))
 
 
 print(group_dict_elements_by_key_type({2.4: 1, 'a': 4, 2.1: 2, 'ads': 12,
-                                       4: 5, 1.5: 8, 'str': 'abc', 6: 2, 7.5: 8, 2: 3, 'as': 1}))
+                                       4: 5, 1.5: 8, 'str': 'abc', 12: 1, 6: 2, 7.5: 8, 2: 3, 'as': 1}))
 
 
 # Вернуть словарь, элементы которого сгруппированы по типу ключа.
@@ -405,16 +400,16 @@ def group_dict_elements_by_key_type_and_sort(dictionary: Dict) -> Dict:
     for k in dictionary:
         if type(k) not in types:
             if isinstance(k, int):
-                types[type(k)] = len(types) + 3
+                types[type(k)] = 3
             elif isinstance(k, float):
-                types[type(k)] = len(types) + 2
+                types[type(k)] = 2
             else:
-                types[type(k)] = len(types)
-    return dict(sorted(dictionary.items(), key=lambda k: (types[type(k[0])], str(k[0])), reverse=True))
+                types[type(k)] = 1
+    return dict(sorted(dictionary.items(), key=lambda k: (types[type(k[0])], k[0]), reverse=True))
 
 
 print(group_dict_elements_by_key_type_and_sort({2.4: 1, 'a': 4, 2.1: 2, 'ads': 12,
-                                                4: 5, 1.5: 8, 'str': 'abc', 6: 2, 7.5: 8, 2: 3, 'as': 1}))
+                                                4: 5, 1.5: 8, 'str': 'abc', 12: 1, 6: 2, 7.5: 8, 2: 3, 'as': 1}))
 
 
 # Подсчитать количество элементов словаря, имеющих числовой тип, значение которых находится
@@ -431,9 +426,8 @@ print(count_dict_elements({1: 2, 2: 412, 3: -24, 5: 2.4, 6: 'str', 7: [1, 2, 4]}
 # в качестве значений использовать значение None.
 def build_dict_from_two_unaligned_lists(keys: List, values: List) -> Dict:
     slowar = dict.fromkeys(keys)
-    slowar2 = zip(slowar, values)
-    slowar.update(slowar2)
-    return slowar
+    slowar2 = dict(zip(slowar, values))
+    return {**slowar, **slowar2}
 
 
 print(build_dict_from_two_unaligned_lists([1, 2, 3, 4, 5], [6, 7, 8]))
@@ -444,9 +438,8 @@ print(build_dict_from_two_unaligned_lists([1, 2, 3, 4, 5], [6, 7, 8]))
 # в качестве значений использовать значение, заданное по-умолчанию.
 def build_dict_from_two_unaligned_lists_and_default(keys: List, values: List, default: Any) -> Dict:
     slowar = {key: default for key in keys}
-    slowar2 = zip(slowar, values)
-    slowar.update(slowar2)
-    return slowar
+    slowar2 = dict(zip(slowar, values))
+    return {**slowar, **slowar2}
 
 
 print(build_dict_from_two_unaligned_lists_and_default([1, 2, 3, 4, 5], [6, 7, 8], 9))
@@ -457,9 +450,8 @@ print(build_dict_from_two_unaligned_lists_and_default([1, 2, 3, 4, 5], [6, 7, 8]
 # в качестве значений использовать значение None.
 def build_dict_from_two_unaligned_iterables(keys: Iterable, values: Iterable) -> Dict:
     slowar = dict.fromkeys(keys)
-    slowar2 = zip(slowar, values)
-    slowar.update(slowar2)
-    return slowar
+    slowar2 = dict(zip(slowar, values))
+    return {**slowar, **slowar2}
 
 
 print(build_dict_from_two_unaligned_iterables({1, 2, 3, 4}, (4, 5, 6)))
